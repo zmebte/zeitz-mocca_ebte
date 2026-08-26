@@ -101,36 +101,51 @@ const hasHeaderSection = homePage.sections.some(
   {draftMode && <DisableDraftMode client:only="react" />}
 </BaseLayout>
 
-<script>
-  const introSection = document.querySelector(".home-hero__intro");
-  const titleLines = document.querySelectorAll(
-    ".home-hero__title-line--top, .home-hero__title-line--bottom",
-  );
+<script is:inline data-astro-rerun>
+  (() => {
+    if (!window.__initHomeHeroIntroScroll) {
+      window.__initHomeHeroIntroScroll = () => {
+        const titleLines = document.querySelectorAll(
+          ".home-hero__title-line--top, .home-hero__title-line--bottom",
+        );
 
-  const scrollIntroIntoView = () => {
-    if (!introSection) return;
+        const scrollIntroIntoView = () => {
+          const introSection = document.querySelector(".home-hero__intro");
 
-    const introRect = introSection.getBoundingClientRect();
-    const maxScrollTop =
-      document.documentElement.scrollHeight - window.innerHeight;
-    // Align the intro section's bottom edge with the viewport bottom edge.
-    const targetScrollTop = Math.min(
-      Math.max(0, introRect.bottom + window.scrollY - window.innerHeight),
-      Math.max(0, maxScrollTop),
-    );
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+          if (!introSection) return;
 
-    window.scrollTo({
-      top: targetScrollTop,
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
-  };
+          const introRect = introSection.getBoundingClientRect();
+          const maxScrollTop =
+            document.documentElement.scrollHeight - window.innerHeight;
+          const targetScrollTop = Math.min(
+            Math.max(0, introRect.bottom + window.scrollY - window.innerHeight),
+            Math.max(0, maxScrollTop),
+          );
+          const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
 
-  titleLines.forEach((titleLine) => {
-    titleLine.addEventListener("click", scrollIntroIntoView);
-  });
+          window.scrollTo({
+            top: targetScrollTop,
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+          });
+        };
+
+        titleLines.forEach((titleLine) => {
+          if (!(titleLine instanceof HTMLElement) || titleLine.dataset.homeIntroScrollBound === "true") {
+            return;
+          }
+
+          titleLine.dataset.homeIntroScrollBound = "true";
+          titleLine.addEventListener("click", scrollIntroIntoView);
+        });
+      };
+
+      document.addEventListener("astro:page-load", window.__initHomeHeroIntroScroll);
+    }
+
+    window.__initHomeHeroIntroScroll();
+  })();
 </script>
 
 <style>
