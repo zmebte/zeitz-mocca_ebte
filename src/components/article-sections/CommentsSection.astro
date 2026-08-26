@@ -34,11 +34,19 @@ const title = section.title || "Comments";
             (() => {
               if (!window.__initOpenRemarkComments) {
                 window.__initOpenRemarkComments = () => {
-                  const widgets = document.querySelectorAll("[data-open-remark]");
+                  const widgets = Array.from(document.querySelectorAll("[data-open-remark]"));
+                  const pendingWidgets = widgets.filter((widget) => {
+                    return !widget.shadowRoot && widget.dataset.openRemarkPending !== "true";
+                  });
 
-                  if (widgets.length === 0) {
+                  if (pendingWidgets.length === 0 || window.__openRemarkScriptLoading) {
                     return;
                   }
+
+                  window.__openRemarkScriptLoading = true;
+                  pendingWidgets.forEach((widget) => {
+                    widget.dataset.openRemarkPending = "true";
+                  });
 
                   document.querySelectorAll("script[data-open-remark-embed]").forEach((script) => {
                     script.remove();
@@ -48,6 +56,20 @@ const title = section.title || "Comments";
                   script.async = true;
                   script.src = "https://open-remark.zeon.studio/embed.js";
                   script.dataset.openRemarkEmbed = "true";
+                  script.addEventListener("load", () => {
+                    window.__openRemarkScriptLoading = false;
+                    window.setTimeout(() => {
+                      pendingWidgets.forEach((widget) => {
+                        delete widget.dataset.openRemarkPending;
+                      });
+                    }, 0);
+                  });
+                  script.addEventListener("error", () => {
+                    window.__openRemarkScriptLoading = false;
+                    pendingWidgets.forEach((widget) => {
+                      delete widget.dataset.openRemarkPending;
+                    });
+                  });
                   document.head.appendChild(script);
                 };
 
