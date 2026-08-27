@@ -191,6 +191,7 @@
   .cookie-consent p {
     margin: 0;
     font: 700 0.65rem / 1.35 var(--font-meta);
+    max-width: 90%;
   }
 
   .cookie-consent__title {
@@ -225,10 +226,17 @@
   }
 
   .cookie-consent button[data-cookie-consent-accept] {
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--surface);
+  }
+
+    .cookie-consent button[data-cookie-consent-decline] {
     background: var(--ink);
     color: var(--surface);
     border: 1px solid var(--surface);
   }
+
 
   .cookie-consent button:hover,
   .cookie-consent button:focus-visible {
