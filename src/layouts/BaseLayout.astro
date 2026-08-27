@@ -1,10 +1,10 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import CookieConsent from "../components/CookieConsent.astro";
 import ScrollProgress from "../components/ScrollProgress.astro";
 import SiteNav from "../components/SiteNav.astro";
 import SmoothScroll from "../components/SmoothScroll.astro";
 import "../styles/theme.css";
-import Analytics from "@vercel/analytics/astro";
 
 
 const {
@@ -28,6 +28,7 @@ const {
     <ScrollProgress />
     <SiteNav />
     <slot />
+    <CookieConsent />
     <script is:inline>
       if (!window.__siteTransitionCursorBound) {
         window.__siteTransitionCursorBound = true;
@@ -54,6 +55,5 @@ const {
         document.addEventListener("astro:page-load", hideTransitionCursor);
       }
     </script>
-     <Analytics />
   </body>
 </html>

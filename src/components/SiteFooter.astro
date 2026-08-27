@@ -101,9 +101,9 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
       <h2>Submissions</h2>
       <div class="site-footer__submissions-content">
         <p>
-          Submit a text to our team for review, and we&rsquo;ll review it based
-          on our <a href="/submissions">submissions guidelines.</a>
+          Have something to contribute to <em>Everything&nbsp;but the Exhibition</em>? <br><br>We welcome completed texts exploring publishing and paracuratorial practices for our Foot Notes and Voice Notes formats. Read our <a href="/submissions">submissions guidelines.</a> for details on what we’re looking for and how to submit.
         </p>
+        
         <a
           class="site-footer__submit-link"
           href="/submissions"
@@ -134,6 +134,13 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
         target="_blank"
         rel="noopener noreferrer">Terms and Conditions</a
       >
+      <a
+        class="site-footer__legal"
+        href="#cookie-settings"
+        data-cookie-consent-open
+      >
+        Cookie Settings
+      </a>
     </div>
   </div>
 </footer>
@@ -297,6 +304,11 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+  }
+
+    .site-footer__submissions-content em {
+      text-shadow: var(--text-shadow-hover-small-white);
+      letter-spacing: -0.01em;
   }
 
   .site-footer__column--submissions p {
