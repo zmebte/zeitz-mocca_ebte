@@ -12,7 +12,13 @@ import type { Article } from "../sanity/lib/types";
 const { article } = Astro.props as { article: Article };
 const { citationMap, citations } = extractArticleCitations(article.contentSections);
 
+const preventTitleWidow = (value = "") =>
+  value.trim().replace(/\s+([^\s]+)$/, "\u00A0$1");
+
 const title = cleanString(article.title);
+const displayTitle = preventTitleWidow(title);
+const articleSlug = cleanString(article.slug?.current);
+const articlePath = articleSlug ? `/articles/${articleSlug}` : "/articles";
 const authorName = formatAuthorNames(article);
 const publishedAtValue = cleanString(article.publishedAt);
 const publishedAt = publishedAtValue
@@ -37,7 +43,7 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
   <body>
     <div class="print-body">
       <header class="masthead">
-        <h1 class="masthead__title">{title}</h1>
+        <h1 class="masthead__title">{displayTitle}</h1>
         {authorName && <p class="masthead__meta">{authorName}</p>}
         {detailLine && <p class="masthead__meta">{detailLine}</p>}
       </header>
@@ -87,6 +93,17 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
               <img src={url} alt={alt} />
               {captionHtml && <figcaption set:html={captionHtml} />}
             </figure>
+          );
+        }
+
+        if (section._type === "audioPlayerSection") {
+          const audioTitle = cleanString(section.title) || title || "this audio";
+
+          return (
+            <p class="print-audio-link">
+              Visit this link to listen to <span>&ldquo;{audioTitle}&rdquo;</span>:{" "}
+              <a href={articlePath}>{articlePath}</a>
+            </p>
           );
         }
 
@@ -214,18 +231,17 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
   }
 
   .masthead {
-    margin: 0 0 calc(var(--baseline) * 5) 0;
+    margin: 0 0 calc(var(--baseline) * 4) 0;
     text-align: center;
   }
 
   .masthead__title {
-    margin: 0 0 var(--baseline);
+    margin: 0 0 calc(var(--baseline) * 2);
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 24pt;
-    line-height: calc(var(--baseline) * 3.5);
-    letter-spacing: -0.02em;
-    
+    line-height: calc(var(--baseline) * 3);
+    letter-spacing: -0.02em; 
   }
 
   .masthead__meta {
@@ -233,7 +249,7 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
     font-family: var(--font-meta);
     font-size: 7pt;
     font-weight: 600;
-    line-height: var(--baseline);
+    line-height: calc(var(--baseline) * 1.5);
     color: var(--muted);
     letter-spacing: var(--meta-letter-spacing);
   }
@@ -297,7 +313,7 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
 
   .print-prose .u-interview {
     float: inline-start;
-    margin-bottom: 14pt;
+    margin-bottom: 7pt;
     margin-right: 14pt;
   }
 
@@ -338,7 +354,7 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
   }
 
   .print-pull-quote {
-    margin: calc(var(--baseline) * 2) 0;
+    margin: calc(var(--baseline) * 1.5) 0 calc(var(--baseline) * 2);
     padding: var(--baseline) 10pt;
     text-align: center;
   }
@@ -396,6 +412,30 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
     letter-spacing: var(--meta-letter-spacing);
     font-weight: 600;
     padding: 0 16pt;
+  }
+
+  .print-audio-link {
+    margin: calc(var(--baseline) * 2) 0;
+    padding: calc(var(--baseline) * 2) 0;
+    border-top: 0.5pt solid var(--line);
+    border-bottom: 0.5pt solid var(--line);
+    font-family: var(--font-meta);
+    font-size: 7pt;
+    font-weight: 600;
+    line-height: calc(var(--baseline) * 1.5);
+    letter-spacing: var(--meta-letter-spacing);
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .print-audio-link span {
+    color: var(--ink);
+  }
+
+  .print-audio-link a {
+    color: var(--ink);
+    text-decoration: none;
+    word-break: break-word;
   }
 
   .print-citations {
