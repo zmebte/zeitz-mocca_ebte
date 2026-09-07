@@ -3,6 +3,8 @@ import type { PresentationPluginOptions } from "sanity/presentation";
 
 export const resolve: PresentationPluginOptions["resolve"] = {
   mainDocuments: defineDocuments([
+    { route: "/submissions", filter: `_type == "submissionsPage" && _id == "submissionsPage"` },
+    { route: "/contact", filter: `_type == "contactPage" && _id == "contactPage"` },
     {
       route: "/",
       filter: `_type == "homePage" && _id == "homePage"`
@@ -13,6 +15,14 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     }
   ]),
   locations: {
+    submissionsPage: defineLocations({
+      select: { title: "title" },
+      resolve: (doc) => ({ locations: [{ title: doc?.title || "Submissions", href: "/submissions" }] })
+    }),
+    contactPage: defineLocations({
+      select: { title: "title" },
+      resolve: (doc) => ({ locations: [{ title: doc?.title || "Contact", href: "/contact" }] })
+    }),
     homePage: defineLocations({
       select: {
         title: "headerTitle"

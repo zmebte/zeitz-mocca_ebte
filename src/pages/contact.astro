@@ -1,30 +1,26 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { loadInformationPage } from "../sanity/lib/loadInformationPage";
+import { renderInlinePortableText } from "../sanity/lib/renderInlinePortableText";
 import dotLogoUrl from "../assets/zeitz-logo-icon_dark.svg?url";
+
+const page = await loadInformationPage("contactPage", Astro.cookies);
 ---
 
 <BaseLayout
-  title="Contact | Everything but the Exhibition"
-  description="Contact Everything but the Exhibition."
+  title={`${page.title} | Everything but the Exhibition`}
+  description={page.seoDescription}
 >
   <main class="contact-page">
     <section class="contact-page__content" aria-labelledby="contact-title">
       <div class="contact-page__body">
-        <p class="contact-page__intro">
-          Please reach out to the team with any questions, proposals, or points
-          of connection related to <em>Everything but the&nbsp;Exhibition.</em>
-        </p>
-        <p class="contact-page__intro">
-          For editorial enquiries, collaborations, submissions, or general
-          correspondence, we welcome thoughtful notes at <a
-            href="mailto:info.everything@zeitzmocaa.museum"
-            >info.everything<wbr>@zeitzmocaa.museum</a
-          > and will respond as soon as possible.
-        </p>
+        {page.intro.map((block) => (
+          <p class="contact-page__intro" set:html={renderInlinePortableText([block])} />
+        ))}
       </div>
 
       <div class="contact-page__footer">
-        <h1 class="contact-page__title" id="contact-title">Contact</h1>
+        <h1 class="contact-page__title" id="contact-title">{page.title}</h1>
         <a
           class="contact-page__mark-link"
           href="/"
@@ -79,29 +75,30 @@ import dotLogoUrl from "../assets/zeitz-logo-icon_dark.svg?url";
   }
 
   .contact-page__intro {
+    overflow-wrap: anywhere;
     max-width: 56rem;
     margin: 0;
     font: 400 clamp(1.5rem, 2.5vw, 2.25rem) / 1 var(--font-display);
     letter-spacing: 0;
   }
 
-  .contact-page__intro em {
+  .contact-page__intro :global(em) {
     text-shadow: var(--text-shadow-hover-large-black);
   }
 
-  .contact-page__intro a {
+  .contact-page__intro :global(a) {
     color: inherit;
     text-decoration-thickness: 0.05em;
     text-underline-offset: 0.12em;
     transition: var(--transition-text-shadow);
   }
 
-  .contact-page__intro a:hover,
-  .contact-page__intro a:focus-visible {
+  .contact-page__intro :global(a:hover),
+  .contact-page__intro :global(a:focus-visible) {
     text-shadow: var(--text-shadow-hover-large-black);
   }
 
-  .contact-page__intro a:focus-visible {
+  .contact-page__intro :global(a:focus-visible) {
     outline: 2px solid currentColor;
     outline-offset: 0.25rem;
   }

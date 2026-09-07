@@ -1,0 +1,164 @@
+{
+  "submissionsPage": {
+    "_id": "submissionsPage",
+    "_type": "submissionsPage",
+    "title": "Submissions",
+    "seoDescription": "Submission guidelines for Everything but the Exhibition.",
+    "intro": [
+      {
+        "_key": "paragraph0",
+        "_type": "block",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_key": "span0",
+            "_type": "span",
+            "text": "We welcome submissions that explore publishing and paracuratorial practices within Foot Notes or Voice Notes formats for ",
+            "marks": []
+          },
+          {
+            "_key": "span1",
+            "_type": "span",
+            "text": "Everything but the Exhibition.",
+            "marks": [
+              "em"
+            ]
+          }
+        ]
+      },
+      {
+        "_key": "paragraph1",
+        "_type": "block",
+        "style": "normal",
+        "markDefs": [
+          {
+            "_key": "link0",
+            "_type": "link",
+            "href": "mailto:info.everything@zeitzmocaa.museum"
+          }
+        ],
+        "children": [
+          {
+            "_key": "span0",
+            "_type": "span",
+            "text": "Submissions should be sent to ",
+            "marks": []
+          },
+          {
+            "_key": "span1",
+            "_type": "span",
+            "text": "info.everything@zeitzmocaa.museum",
+            "marks": [
+              "link0"
+            ]
+          }
+        ]
+      }
+    ],
+    "guidelines": [
+      {
+        "_key": "guideline0",
+        "_type": "guideline",
+        "text": "Submissions imply final texts. Unfortunately, we are unable to accept proposals at this stage."
+      },
+      {
+        "_key": "guideline1",
+        "_type": "guideline",
+        "text": "Your text submission should be accompanied by a CV, bio and portfolio."
+      },
+      {
+        "_key": "guideline2",
+        "_type": "guideline",
+        "text": "When texts require accompanying images, please ensure these are original images you have ownership to. We cannot accept reproductions of images, images where rights are required, or any work that is not your own."
+      },
+      {
+        "_key": "guideline3",
+        "_type": "guideline",
+        "text": "Foot Notes submissions should be no more than 2000 words and critically engage with the subject matter. These longer-form texts explicate a topic through rigorous research."
+      },
+      {
+        "_key": "guideline4",
+        "_type": "guideline",
+        "text": "Voice Notes submissions are experimental, subjective forms of writing of no more than 500 words to accompany a visual or sonic component. We also welcome book reviews in this format."
+      },
+      {
+        "_key": "guideline5",
+        "_type": "guideline",
+        "text": "Submissions do not guarantee publication. Decisions will be communicated to successful submissions upon review."
+      }
+    ]
+  },
+  "contactPage": {
+    "_id": "contactPage",
+    "_type": "contactPage",
+    "title": "Contact",
+    "seoDescription": "Contact Everything but the Exhibition.",
+    "intro": [
+      {
+        "_key": "paragraph0",
+        "_type": "block",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_key": "span0",
+            "_type": "span",
+            "text": "Please reach out to the team with any questions, proposals, or points of connection related to ",
+            "marks": []
+          },
+          {
+            "_key": "span1",
+            "_type": "span",
+            "text": "Everything but the Exhibition.",
+            "marks": [
+              "em"
+            ]
+          }
+        ]
+      },
+      {
+        "_key": "paragraph1",
+        "_type": "block",
+        "style": "normal",
+        "markDefs": [
+          {
+            "_key": "link0",
+            "_type": "link",
+            "href": "mailto:info.everything@zeitzmocaa.museum"
+          }
+        ],
+        "children": [
+          {
+            "_key": "span0",
+            "_type": "span",
+            "text": "For editorial enquiries, collaborations, submissions, or general correspondence, we welcome thoughtful notes at ",
+            "marks": []
+          },
+          {
+            "_key": "span1",
+            "_type": "span",
+            "text": "info.everything",
+            "marks": [
+              "link0"
+            ]
+          },
+          {
+            "_key": "span2",
+            "_type": "span",
+            "text": "@zeitzmocaa.museum",
+            "marks": [
+              "link0"
+            ]
+          },
+          {
+            "_key": "span3",
+            "_type": "span",
+            "text": " and will respond as soon as possible.",
+            "marks": []
+          }
+        ]
+      }
+    ]
+  }
+}

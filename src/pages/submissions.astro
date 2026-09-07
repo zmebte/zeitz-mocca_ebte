@@ -1,11 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { loadInformationPage } from "../sanity/lib/loadInformationPage";
+import { renderInlinePortableText } from "../sanity/lib/renderInlinePortableText";
 import dotLogoUrl from "../assets/zeitz-logo-icon_dark.svg?url";
+
+const page = await loadInformationPage("submissionsPage", Astro.cookies);
 ---
 
 <BaseLayout
-  title="Submissions | Everything but the Exhibition"
-  description="Submission guidelines for Everything but the Exhibition."
+  title={`${page.title} | Everything but the Exhibition`}
+  description={page.seoDescription}
 >
   <main class="submissions-page">
     <section
@@ -13,53 +17,15 @@ import dotLogoUrl from "../assets/zeitz-logo-icon_dark.svg?url";
       aria-labelledby="submissions-title"
     >
       <div class="submissions-page__body" data-lenis-prevent>
-        <p class="submissions-page__intro">
-          We welcome submissions that explore publishing and paracuratorial
-          practices within Foot Notes or Voice Notes formats for <em
-            >Everything but the Exhibition.</em
-          >
-        </p>
-        <p class="submissions-page__intro">
-          Submissions should be sent to <a
-            href="mailto:info.everything@zeitzmocaa.museum"
-            >info.everything@zeitzmocaa.museum</a
-          >
-        </p>
+        {page.intro.map((block) => (
+          <p class="submissions-page__intro" set:html={renderInlinePortableText([block])} />
+        ))}
         <ul class="submissions-page__guidelines">
-          <li>
-            Submissions imply final texts. Unfortunately, we are unable to
-            accept proposals at this stage.
-          </li>
-          <li>
-            Your text submission should be accompanied by a CV, bio and
-            portfolio.
-          </li>
-          <li>
-            When texts require accompanying images, please ensure these are
-            original images you have ownership to. We cannot accept
-            reproductions of images, images where rights are required, or any
-            work that is not your own.
-          </li>
-          <li>
-            Foot Notes submissions should be no more than 2000 words and
-            critically engage with the subject matter. These longer-form texts
-            explicate a topic through rigorous research.
-          </li>
-          <li>
-            Voice Notes submissions are experimental, subjective forms of
-            writing of no more than 500 words to accompany a visual or sonic
-            component. We also welcome book reviews in this format.
-          </li>
-          <li>
-            Submissions do not guarantee publication. Decisions will be
-            communicated to successful submissions upon review.
-          </li>
+          {page.guidelines?.map((guideline) => <li>{guideline.text}</li>)}
         </ul>
       </div>
       <div class="submissions-page__footer">
-        <h1 class="submissions-page__title" id="submissions-title">
-          Submissions
-        </h1>
+        <h1 class="submissions-page__title" id="submissions-title">{page.title}</h1>
         <a
           class="submissions-page__mark-link"
           href="/"
@@ -139,6 +105,7 @@ import dotLogoUrl from "../assets/zeitz-logo-icon_dark.svg?url";
   }
 
   .submissions-page__intro {
+    overflow-wrap: anywhere;
     max-width: 79rem;
     margin: 0;
     font: 400 clamp(1.5rem, 2.5vw, 2.25rem) / 1 var(--font-display);
@@ -147,11 +114,11 @@ import dotLogoUrl from "../assets/zeitz-logo-icon_dark.svg?url";
     transition: var(--transition-text-shadow);
   }
 
-  .submissions-page__intro a:hover {
+  .submissions-page__intro :global(a:hover) {
     text-shadow: var(--text-shadow-hover-large-white);
   }
 
-  .submissions-page__intro em {
+  .submissions-page__intro :global(em) {
     text-shadow: var(--text-shadow-hover-large-white);
   }
 

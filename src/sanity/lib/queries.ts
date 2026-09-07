@@ -1,5 +1,9 @@
 import groq from "groq";
 
+export const informationPageQuery = groq`
+  *[_id == $id][0]{_id, title, seoDescription, intro[]{...}, guidelines[]{_key, text}}
+`;
+
 const articleAuthorFields = groq`
   author->{
     _id,

@@ -1,6 +1,6 @@
 import type { StructureResolver } from "sanity/structure";
 
-const hiddenTypes = ["homePage", "media.tag"];
+const hiddenTypes = ["homePage", "submissionsPage", "contactPage", "media.tag"];
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -14,6 +14,9 @@ export const structure: StructureResolver = (S) =>
             .documentId("homePage")
             .title("Home Page")
         ),
+      ...([ ["submissionsPage", "Submissions"], ["contactPage", "Contact"] ] as const).map(([type, title]) =>
+        S.listItem().title(title).child(S.document().schemaType(type).documentId(type).title(title))
+      ),
       S.divider(),
       ...S.documentTypeListItems().filter(
         (listItem) => !hiddenTypes.includes(listItem.getId() || "")

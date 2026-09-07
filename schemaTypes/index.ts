@@ -9,6 +9,7 @@ import { imageSection } from "./imageSection.ts";
 import { homeFeaturedArticleSection } from "./homeFeaturedArticleSection.ts";
 import { homeHeaderSection } from "./homeHeaderSection.ts";
 import { homePage } from "./homePage.ts";
+import { informationPages } from "./informationPages.ts";
 import { homeQuoteSection } from "./homeQuoteSection.ts";
 import { homeSplitFeatureSection } from "./homeSplitFeatureSection.ts";
 import { portableText } from "./portableText.ts";
@@ -20,6 +21,7 @@ import { videoSection } from "./videoSection.ts";
 
 export const schemaTypes = [
   homePage,
+  ...informationPages,
   article,
   articleIndexSection,
   categoryCardsSection,

@@ -25,6 +25,12 @@ export default defineConfig({
     })
   ],
   schema: {
-    types: schemaTypes
+    types: schemaTypes,
+    templates: (templates) => templates.filter(({ schemaType }) => !["submissionsPage", "contactPage"].includes(schemaType))
+  },
+  document: {
+    actions: (actions, { schemaType }) => ["submissionsPage", "contactPage"].includes(schemaType)
+      ? actions.filter(({ action }) => action !== "duplicate" && action !== "delete")
+      : actions
   }
 });
