@@ -1,5 +1,16 @@
 import groq from "groq";
 
+export const footerQuery = groq`
+  *[_id == "footer"][0]{
+    _id,
+    navigation[]{_key, label, href},
+    socialLinks[]{_key, label, href},
+    submissionsTitle,
+    submissionsCopy[]{...},
+    submitLink{label, href}
+  }
+`;
+
 export const informationPageQuery = groq`
   *[_id == $id][0]{_id, title, seoDescription, intro[]{...}, guidelines[]{_key, text}}
 `;

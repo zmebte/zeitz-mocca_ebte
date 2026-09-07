@@ -1,34 +1,14 @@
 ---
 import heroPaperSvg from "../assets/home/hero-paper.svg?raw";
 import footerLogoUrl from "../assets/zeitz-mocaa-logo_light.svg?url";
-import { isFeatureEnabled, type FeatureFlag } from "../lib/featureFlags";
+import { loadFooter } from "../sanity/lib/loadFooter";
+import { renderInlinePortableText } from "../sanity/lib/renderInlinePortableText";
+import { safeLinkHref } from "../sanity/lib/safeLinkHref";
 
-type FooterLink = {
-  href: string;
-  label: string;
-  featureFlag?: FeatureFlag;
-};
-
-const links: FooterLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/articles", label: "Index" },
-  { href: "/contact", label: "Contact" },
-  { href: "/submissions", label: "Submit" },
-].filter((link) => !link.featureFlag || isFeatureEnabled(link.featureFlag));
-
-const socialLinks = [
-  { href: "https://www.instagram.com/zeitzmocaa/", label: "Instagram" },
-  {
-    href: "https://www.youtube.com/channel/UCDJltdsHMhBhgl_y6MMEcyQ",
-    label: "Youtube",
-  },
-  { href: "https://www.facebook.com/ZeitzMOCAA/", label: "Facebook" },
-  {
-    href: "https://za.linkedin.com/company/zeitz-museum-of-contemporary-art-africa",
-    label: "LinkedIn",
-  },
-  { href: "https://twitter.com/ZeitzMOCAA", label: "Twitter" },
-];
+const footer = await loadFooter(Astro.cookies);
+const links = (footer.navigation ?? []).filter((link) => safeLinkHref(link.href));
+const socialLinks = (footer.socialLinks ?? []).filter((link) => safeLinkHref(link.href));
+const submitHref = safeLinkHref(footer.submitLink?.href);
 
 const copyrightYear = new Date().getFullYear();
 const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
@@ -80,7 +60,7 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
     <div class="site-footer__column site-footer__column--navigation">
       <h2>Navigation</h2>
       <nav class="site-footer__nav-links" aria-label="Footer navigation">
-        {links.map((link) => <a href={link.href}>{link.label}</a>)}
+        {links.map((link) => <a href={safeLinkHref(link.href)}>{link.label}</a>)}
       </nav>
     </div>
 
@@ -89,7 +69,7 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
       <nav class="site-footer__social-links" aria-label="Social media">
         {
           socialLinks.map((link) => (
-            <a href={link.href} target="_blank" rel="noopener noreferrer">
+            <a href={safeLinkHref(link.href)} target="_blank" rel="noopener noreferrer">
               {link.label}
             </a>
           ))
@@ -98,17 +78,16 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
     </div>
 
     <div class="site-footer__column site-footer__column--submissions">
-      <h2>Submissions</h2>
+      <h2>{footer.submissionsTitle}</h2>
       <div class="site-footer__submissions-content">
-        <p>
-          Have something to contribute to <em>Everything&nbsp;but&nbsp;the&nbsp;Exhibition</em>? <br><br>We welcome completed texts exploring publishing and paracuratorial practices for our Foot Notes and Voice Notes formats. Read our <a href="/submissions">submission guidelines</a>. for details on what we’re looking for and how&nbsp;to submit.
-        </p>
-        
-        <a
-          class="site-footer__submit-link"
-          href="/submissions"
-          >Submit</a
-        >
+        <div class="site-footer__submissions-copy">
+          {(footer.submissionsCopy ?? []).map((block) => (
+            <p set:html={renderInlinePortableText([block], false)} />
+          ))}
+        </div>
+        {submitHref && footer.submitLink && (
+          <a class="site-footer__submit-link" href={submitHref}>{footer.submitLink.label}</a>
+        )}
       </div>
     </div>
   </div>
@@ -306,7 +285,7 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
     gap: 2.5rem;
   }
 
-    .site-footer__submissions-content em {
+    .site-footer__submissions-content :global(em) {
       text-shadow: var(--text-shadow-hover-small-white);
       letter-spacing: -0.01em;
   }
@@ -318,10 +297,14 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
     letter-spacing: 0;
   }
 
-  .site-footer__column--submissions p a {
+  .site-footer__column--submissions p :global(a) {
     color: inherit;
     text-underline-offset: 0.14em;
     transition: var(--transition-text-shadow);
+  }
+
+  .site-footer__submissions-copy p + p {
+    margin-top: 1.05em;
   }
 
   .site-footer__submit-link {
@@ -341,7 +324,7 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
   }
 
   .site-footer__logo-link:focus-visible,
-  .site-footer a:focus-visible {
+  .site-footer :global(a:focus-visible) {
     outline: 2px solid currentColor;
     outline-offset: 0.25rem;
   }
@@ -350,8 +333,8 @@ const footerPaperSvg = heroPaperSvg.includes("preserveAspectRatio=")
   .site-footer__nav-links a:focus-visible,
   .site-footer__social-links a:hover,
   .site-footer__social-links a:focus-visible,
-  .site-footer__column--submissions p a:hover,
-  .site-footer__column--submissions p a:focus-visible {
+  .site-footer__column--submissions p :global(a:hover),
+  .site-footer__column--submissions p :global(a:focus-visible) {
     text-shadow: var(--text-shadow-hover-small-white);
   }
 

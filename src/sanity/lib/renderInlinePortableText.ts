@@ -1,4 +1,4 @@
-import { cleanString } from "./clean";
+import { safeLinkHref } from "./safeLinkHref";
 import type { PortableTextBlock, PortableTextMarkDef } from "./types";
 
 const escapeHtml = (value: string) =>
@@ -9,7 +9,7 @@ const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
-function wrapMarks(text: string, marks: string[] = [], markDefs: PortableTextMarkDef[] = []) {
+function wrapMarks(text: string, marks: string[] = [], markDefs: PortableTextMarkDef[] = [], openLinksInNewTab = true) {
   return marks.reduce((output, mark) => {
     if (mark === "strong") {
       return `<strong>${output}</strong>`;
@@ -19,21 +19,21 @@ function wrapMarks(text: string, marks: string[] = [], markDefs: PortableTextMar
     }
     const definition = markDefs.find((item) => item._key === mark);
     if (definition?._type === "link") {
-      const href = cleanString(definition.href);
+      const href = safeLinkHref(definition.href);
       if (!href) {
         return output;
       }
-      return `<a href="${escapeHtml(href)}" target="_blank" rel="noreferrer">${output}</a>`;
+      return `<a href="${escapeHtml(href)}"${openLinksInNewTab ? ' target="_blank" rel="noopener noreferrer"' : ""}>${output}</a>`;
     }
     return output;
   }, text);
 }
 
-export function renderInlinePortableText(blocks: PortableTextBlock[] | null = []) {
+export function renderInlinePortableText(blocks: PortableTextBlock[] | null = [], openLinksInNewTab = true) {
   return (blocks || [])
     .map((block) =>
       block.children
-        ?.map((child) => wrapMarks(escapeHtml(child.text), child.marks, block.markDefs))
+        ?.map((child) => wrapMarks(escapeHtml(child.text), child.marks, block.markDefs, openLinksInNewTab))
         .join("")
     )
     .filter(Boolean)

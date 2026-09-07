@@ -1,0 +1,132 @@
+{
+  "_id": "footer",
+  "_type": "footer",
+  "navigation": [
+    {
+      "_key": "nav0",
+      "_type": "footerLink",
+      "label": "Home",
+      "href": "/"
+    },
+    {
+      "_key": "nav1",
+      "_type": "footerLink",
+      "label": "Index",
+      "href": "/articles"
+    },
+    {
+      "_key": "nav2",
+      "_type": "footerLink",
+      "label": "Contact",
+      "href": "/contact"
+    },
+    {
+      "_key": "nav3",
+      "_type": "footerLink",
+      "label": "Submit",
+      "href": "/submissions"
+    }
+  ],
+  "socialLinks": [
+    {
+      "_key": "social0",
+      "_type": "footerLink",
+      "label": "Instagram",
+      "href": "https://www.instagram.com/zeitzmocaa/"
+    },
+    {
+      "_key": "social1",
+      "_type": "footerLink",
+      "label": "Youtube",
+      "href": "https://www.youtube.com/channel/UCDJltdsHMhBhgl_y6MMEcyQ"
+    },
+    {
+      "_key": "social2",
+      "_type": "footerLink",
+      "label": "Facebook",
+      "href": "https://www.facebook.com/ZeitzMOCAA/"
+    },
+    {
+      "_key": "social3",
+      "_type": "footerLink",
+      "label": "LinkedIn",
+      "href": "https://za.linkedin.com/company/zeitz-museum-of-contemporary-art-africa"
+    },
+    {
+      "_key": "social4",
+      "_type": "footerLink",
+      "label": "Twitter",
+      "href": "https://twitter.com/ZeitzMOCAA"
+    }
+  ],
+  "submissionsTitle": "Submissions",
+  "submissionsCopy": [
+    {
+      "_key": "intro",
+      "_type": "block",
+      "style": "normal",
+      "children": [
+        {
+          "_key": "start",
+          "_type": "span",
+          "text": "Have something to contribute to ",
+          "marks": []
+        },
+        {
+          "_key": "publication",
+          "_type": "span",
+          "text": "Everything but the Exhibition",
+          "marks": [
+            "em"
+          ]
+        },
+        {
+          "_key": "end",
+          "_type": "span",
+          "text": "?",
+          "marks": []
+        }
+      ],
+      "markDefs": []
+    },
+    {
+      "_key": "details",
+      "_type": "block",
+      "style": "normal",
+      "children": [
+        {
+          "_key": "start",
+          "_type": "span",
+          "text": "We welcome completed texts exploring publishing and paracuratorial practices for our Foot Notes and Voice Notes formats. Read our ",
+          "marks": []
+        },
+        {
+          "_key": "link",
+          "_type": "span",
+          "text": "submission guidelines",
+          "marks": [
+            "guidelines"
+          ]
+        },
+        {
+          "_key": "end",
+          "_type": "span",
+          "text": ". for details on what we’re looking for and how to submit.",
+          "marks": []
+        }
+      ],
+      "markDefs": [
+        {
+          "_key": "guidelines",
+          "_type": "link",
+          "href": "/submissions"
+        }
+      ]
+    }
+  ],
+  "submitLink": {
+    "_type": "footerLink",
+    "label": "Submit",
+    "href": "/submissions"
+  }
+}

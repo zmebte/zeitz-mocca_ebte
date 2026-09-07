@@ -15,6 +15,9 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     }
   ]),
   locations: {
+    footer: defineLocations({
+      locations: [{ title: "Home Page footer", href: "/" }, { title: "Index footer", href: "/articles" }]
+    }),
     submissionsPage: defineLocations({
       select: { title: "title" },
       resolve: (doc) => ({ locations: [{ title: doc?.title || "Submissions", href: "/submissions" }] })
