@@ -24,7 +24,14 @@ const pageDescription = cleanString(article.excerpt || article.title);
 const articleCategoryClass = getArticleCategoryClass(article);
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} bodyClass={articleCategoryClass}>
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  bodyClass={articleCategoryClass}
+  socialType="article"
+  socialImage={article.coverImage?.url}
+  socialImageAlt={article.coverImage?.alt}
+>
   <div class="site-shell">
 
     <ArticleHeader article={article} />

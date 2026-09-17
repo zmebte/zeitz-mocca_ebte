@@ -1,5 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { canonicalUrl } from "../lib/seo";
+import { cleanString } from "../sanity/lib/clean";
 import CookieConsent from "../components/CookieConsent.astro";
 import ScrollProgress from "../components/ScrollProgress.astro";
 import SiteNav from "../components/SiteNav.astro";
@@ -10,8 +12,29 @@ import "../styles/theme.css";
 const {
   bodyClass = "",
   description = "Everything but the Exhibition.",
-  title = "Everything but the Exhibition"
+  title = "Everything but the Exhibition",
+  socialImage = "",
+  socialImageAlt = "",
+  socialType = "website"
 } = Astro.props;
+const pageUrl = canonicalUrl(Astro.url, Astro.site!);
+const sharingTitle = cleanString(title);
+const sharingDescription = cleanString(description);
+const imageSource = cleanString(socialImage);
+const imageUrl = new URL(imageSource || "/images/social-default.png", Astro.site);
+const isSanityImage = imageUrl.hostname === "cdn.sanity.io";
+if (isSanityImage) {
+  imageUrl.searchParams.set("w", "1200");
+  imageUrl.searchParams.set("h", "630");
+  imageUrl.searchParams.set("fit", "crop");
+  imageUrl.searchParams.set("fm", "jpg");
+  imageUrl.searchParams.set("q", "85");
+  imageUrl.searchParams.delete("auto");
+}
+const imageAlt = imageSource
+  ? cleanString(socialImageAlt) || sharingTitle
+  : "Everything but the Exhibition — Zeitz MOCAA";
+const hasFixedImageSize = !imageSource || isSanityImage;
 ---
 
 <!doctype html>
@@ -21,6 +44,21 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:site_name" content="Everything but the Exhibition" />
+    <meta property="og:type" content={socialType} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:title" content={sharingTitle} />
+    <meta property="og:description" content={sharingDescription} />
+    <meta property="og:image" content={imageUrl.href} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {hasFixedImageSize && <meta property="og:image:width" content="1200" />}
+    {hasFixedImageSize && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={sharingTitle} />
+    <meta name="twitter:description" content={sharingDescription} />
+    <meta name="twitter:image" content={imageUrl.href} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="icon" type="image/svg+xml" href="/ebte-favicon.ico" />
     <ClientRouter />
   </head>

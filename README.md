@@ -49,6 +49,32 @@ SANITY_STUDIO_URL=https://your-production-domain/studio
 
 `SANITY_STUDIO_PREVIEW_URL` should point to the deployed frontend URL. `SANITY_STUDIO_URL` should point to the deployed Studio route.
 
+## Search indexing
+
+Public pages include Open Graph and Twitter large-image card metadata using their page
+titles, descriptions, and canonical URLs. Articles use their Sanity cover image resized
+to a 1200×630 JPEG; pages without a cover use `public/images/social-default.png`.
+Regenerate the branded fallback with `node scripts/generate-social-image.mjs`.
+
+The production origin is configured as `https://ebte.zeitzmocaa.art` in `astro.config.mjs`.
+The shared page layout emits canonical URLs on that origin, discarding tracking parameters
+while retaining valid article category filters.
+
+`/sitemap.xml` fetches published article slugs from Sanity on demand (with a five-minute
+shared cache), alongside public pages and category indexes. The authors index is included
+only when its feature flag is enabled. CMS failures return 503 rather than a partial sitemap.
+`/robots.txt` advertises the sitemap and permits crawling so Google can read indexing headers.
+
+Middleware sends `X-Robots-Tag: noindex, follow` for print HTML, PDF downloads, print preview,
+Studio, draft-mode endpoints, and responses viewed with a draft-mode cookie. Draft responses
+are also marked private and non-cacheable. These controls do not replace authentication.
+
+After deployment, submit `https://ebte.zeitzmocaa.art/sitemap.xml` in Google Search Console
+and inspect a public article URL. Indexing changes take effect after Google recrawls the site.
+
+Run the focused SEO regression checks with `node --experimental-strip-types scripts/check-seo.mjs`
+(Node 22.6+).
+
 ## Feature Flags
 
 Feature flags live in `src/lib/featureFlags.ts`. They are intended for hiding in-progress routes and navigation items without deleting the underlying page.

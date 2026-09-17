@@ -19,6 +19,7 @@ const title = cleanString(article.title);
 const displayTitle = preventTitleWidow(title);
 const articleSlug = cleanString(article.slug?.current);
 const articlePath = articleSlug ? `/articles/${articleSlug}` : "/articles";
+const articleUrl = new URL(articlePath, Astro.site).href;
 const authorName = formatAuthorNames(article);
 const publishedAtValue = cleanString(article.publishedAt);
 const publishedAt = publishedAtValue
@@ -102,7 +103,7 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
           return (
             <p class="print-audio-link">
               Visit this link to listen to <span>&ldquo;{audioTitle}&rdquo;</span>:{" "}
-              <a href={articlePath}>{articlePath}</a>
+              <a href={articleUrl}>{articleUrl}</a>
             </p>
           );
         }

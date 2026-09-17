@@ -7,6 +7,7 @@ import { loadEnv } from "vite";
 const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 
 export default defineConfig({
+  site: "https://ebte.zeitzmocaa.art",
   output: "server",
   adapter: vercel(),
   devToolbar: {
