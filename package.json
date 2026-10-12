@@ -9,7 +9,6 @@
     "preview": "astro preview",
     "check": "astro check",
     "studio": "sanity dev",
-    "studio:legacy": "npm --prefix studio-zeitz-mocaa run dev",
     "studio:build": "sanity build",
     "studio:deploy": "sanity deploy",
     "studio:graphql": "sanity graphql deploy"
