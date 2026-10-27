@@ -2,6 +2,7 @@ import { defineConfig } from "sanity";
 import { presentationTool } from "sanity/presentation";
 import { structureTool } from "sanity/structure";
 import { media } from "sanity-plugin-media";
+import { trashTool } from "sanity-plugin-trash";
 import { schemaTypes } from "./schemaTypes/index.ts";
 import { resolve } from "./src/sanity/presentation/resolve.ts";
 import { structure } from "./src/sanity/structure.ts";
@@ -22,7 +23,8 @@ export default defineConfig({
           enable: "/api/draft-mode/enable"
         }
       }
-    })
+    }),
+    trashTool()
   ],
   schema: {
     types: schemaTypes,

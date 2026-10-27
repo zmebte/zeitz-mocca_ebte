@@ -15,7 +15,7 @@ const width = cleanString(section.width) || "standard";
   {pullQuotes.length > 0 && pullQuotePlacement === "top" && (
     <div class="rich-text__pull-quotes">
       {pullQuotes.map((pullQuote) => (
-        <PullQuoteSection section={{ quote: pullQuote.quote, size: "normal" }} article={article}>
+        <PullQuoteSection section={{ quote: pullQuote.quoteBlocks, size: "normal" }} article={article}>
           <div slot="context" class="rich-text__context-wrap">
             <button
               class="rich-text__context-link"
@@ -35,7 +35,7 @@ const width = cleanString(section.width) || "standard";
   {pullQuotes.length > 0 && pullQuotePlacement === "bottom" && (
     <div class="rich-text__pull-quotes">
       {pullQuotes.map((pullQuote) => (
-        <PullQuoteSection section={{ quote: pullQuote.quote, size: "normal" }} article={article}>
+        <PullQuoteSection section={{ quote: pullQuote.quoteBlocks, size: "normal" }} article={article}>
           <div slot="context" class="rich-text__context-wrap">
             <button
               class="rich-text__context-link"

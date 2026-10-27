@@ -56,7 +56,7 @@ const detailLine = [publishedAt, readTime ? `${readTime} read` : ""]
           const extractedQuotes = extractPullQuoteRuns(section.body);
           const quoteBlocks = extractedQuotes.map((pullQuote) => (
             <figure class="print-pull-quote print-pull-quote--inline">
-              <blockquote>{pullQuote.quote}</blockquote>
+              <blockquote set:html={renderPullQuote(pullQuote.quoteBlocks)} />
             </figure>
           ));
 

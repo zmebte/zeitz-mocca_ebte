@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { perspectiveCookieName } from "@sanity/preview-url-secret/constants";
 import { cleanString } from "../../../../sanity/lib/clean";
 import { loadArticleBySlug } from "../../../../sanity/lib/loadArticleBySlug";
 import { getPdfBrowser } from "../../../../server/pdfBrowser";
@@ -35,11 +36,29 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
   }
 
   const browser = await getPdfBrowser();
-  const page = await browser.newPage();
+  // Isolate preview cookies from other downloads using the shared browser.
+  const context = await browser.createBrowserContext();
 
   try {
-    const printUrl = new URL(`/articles/${slug}/print`, url.origin);
-    await page.goto(printUrl.toString(), { waitUntil: "networkidle0" });
+    const perspective = cookies.get(perspectiveCookieName)?.value;
+    if (perspective) {
+      await context.setCookie({
+        name: perspectiveCookieName,
+        value: encodeURIComponent(perspective),
+        domain: url.hostname,
+        path: "/",
+        secure: url.protocol === "https:",
+        httpOnly: true,
+        sameSite: "Lax"
+      });
+    }
+
+    const page = await context.newPage();
+    const printUrl = new URL(`/articles/${encodeURIComponent(slug)}/print`, url.origin);
+    const printResponse = await page.goto(printUrl.toString(), { waitUntil: "networkidle0" });
+    if (!printResponse?.ok()) {
+      return new Response("The article print page could not be loaded.", { status: 502 });
+    }
     await page.evaluate(() => document.fonts.ready);
 
     const pdfBuffer = await page.pdf({
@@ -59,6 +78,6 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
       }
     });
   } finally {
-    await page.close();
+    await context.close();
   }
 };

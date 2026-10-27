@@ -8,6 +8,7 @@ export interface PullQuoteRun {
   contextAfter: string;
   contextBefore: string;
   quote: string;
+  quoteBlocks: PortableTextBlock[];
   startChildIndex: number;
   targetId: string;
 }
@@ -80,6 +81,18 @@ export function extractPullQuoteRuns(blocks: PortableTextBlock[] = []) {
         runEndOffset
       );
 
+      // Keep inline formatting while trimming only the edges of the selected run.
+      let childOffset = currentRunStartOffset;
+      const quoteChildren = currentRunChildren.flatMap((child) => {
+        const start = Math.max(0, normalizedStart - childOffset);
+        const end = Math.min(child.text.length, normalizedEnd - childOffset);
+        childOffset += child.text.length;
+        return end > start ? [{
+          ...child,
+          text: child.text.slice(start, end),
+          marks: child.marks?.filter((mark) => mark !== PULL_QUOTE_MARK)
+        }] : [];
+      });
       currentRunChildren = [];
 
       if (!quote) {
@@ -98,6 +111,12 @@ export function extractPullQuoteRuns(blocks: PortableTextBlock[] = []) {
         contextBefore,
         endChildIndex,
         quote,
+        quoteBlocks: [{
+          _type: "block",
+          style: "normal",
+          markDefs: block.markDefs,
+          children: quoteChildren
+        }],
         startChildIndex: currentRunStartChildIndex,
         targetId: createTargetId(block, blockIndex, runIndex)
       });

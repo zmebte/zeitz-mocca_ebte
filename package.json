@@ -31,6 +31,7 @@
     "react-dom": "latest",
     "sanity": "^6.9.1",
     "sanity-plugin-media": "^6.0.0",
+    "sanity-plugin-trash": "^1.2.0",
     "styled-components": "^6.4.3"
   },
   "devDependencies": {
