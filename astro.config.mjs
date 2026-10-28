@@ -9,7 +9,16 @@ const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 export default defineConfig({
   site: "https://ebte.zeitzmocaa.art",
   output: "server",
-  adapter: vercel(),
+  adapter: vercel({
+    includeFiles: ["node_modules/@sparticuz/chromium/bin"],
+    maxDuration: 60
+  }),
+  vite: {
+    ssr: {
+      // Chromium resolves its compressed binaries relative to its own module.
+      external: ["@sparticuz/chromium", "puppeteer"]
+    }
+  },
   devToolbar: {
     enabled: false
   },

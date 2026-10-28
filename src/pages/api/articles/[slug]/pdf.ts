@@ -22,7 +22,7 @@ function slugifyFilename(value: string) {
   return cleaned.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "article";
 }
 
-export const GET: APIRoute = async ({ params, cookies, url }) => {
+const generatePdf: APIRoute = async ({ params, cookies, url }) => {
   const slug = cleanString(params.slug);
 
   if (!slug) {
@@ -71,7 +71,7 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
 
     const filename = `${slugifyFilename(cleanString(article.title) || slug)}.pdf`;
 
-    return new Response(pdfBuffer, {
+    return new Response(new Uint8Array(pdfBuffer), {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="${filename}"`
@@ -79,5 +79,20 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
     });
   } finally {
     await context.close();
+  }
+};
+
+export const GET: APIRoute = async (context) => {
+  try {
+    return await generatePdf(context);
+  } catch (error) {
+    console.error("[article-pdf] PDF generation failed", {
+      slug: context.params.slug,
+      error
+    });
+    return new Response("The PDF could not be generated. Please try again.", {
+      status: 500,
+      headers: { "Cache-Control": "no-store" }
+    });
   }
 };

@@ -3,28 +3,36 @@ import chromium from "@sparticuz/chromium";
 
 let browserPromise: Promise<Browser> | null = null;
 
-export async function getPdfBrowser(): Promise<Browser> {
-  if (browserPromise) {
-    const browser = await browserPromise;
-    if (browser.connected) {
-      return browser;
-    }
-    browserPromise = null;
-  }
-
+async function launchPdfBrowser(): Promise<Browser> {
   const isVercel = Boolean(process.env.VERCEL);
   const launchOptions: LaunchOptions = isVercel
     ? {
         args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
-        ignoreHTTPSErrors: true
+        headless: "shell"
       }
     : {
         headless: true
       };
 
-  browserPromise = puppeteer.launch(launchOptions);
-  return browserPromise;
+  return puppeteer.launch(launchOptions);
+}
+
+export async function getPdfBrowser(): Promise<Browser> {
+  // Cache extraction as well as launch so concurrent cold requests share both.
+  const pending = browserPromise ??= launchPdfBrowser();
+  let browser: Browser;
+  try {
+    browser = await pending;
+  } catch (error) {
+    // A failed launch must not poison every subsequent request in this instance.
+    if (browserPromise === pending) browserPromise = null;
+    throw error;
+  }
+
+  if (!browser.connected) {
+    if (browserPromise === pending) browserPromise = null;
+    return getPdfBrowser();
+  }
+  return browser;
 }
