@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { perspectiveCookieName } from "@sanity/preview-url-secret/constants";
 import { cleanString } from "../../../../sanity/lib/clean";
 import { loadArticleBySlug } from "../../../../sanity/lib/loadArticleBySlug";
-import { getPdfBrowser } from "../../../../server/pdfBrowser";
+import { launchPdfBrowser } from "../../../../server/pdfBrowser";
 
 export const prerender = false;
 
@@ -35,11 +35,12 @@ const generatePdf: APIRoute = async ({ params, cookies, url }) => {
     return new Response("Article not found", { status: 404 });
   }
 
-  const browser = await getPdfBrowser();
-  // Isolate preview cookies from other downloads using the shared browser.
-  const context = await browser.createBrowserContext();
+  const browser = await launchPdfBrowser();
 
   try {
+    // Serverless Chromium cannot reliably create incognito contexts. A dedicated
+    // browser per download isolates preview cookies using its default context.
+    const context = browser.defaultBrowserContext();
     const perspective = cookies.get(perspectiveCookieName)?.value;
     if (perspective) {
       await context.setCookie({
@@ -78,7 +79,10 @@ const generatePdf: APIRoute = async ({ params, cookies, url }) => {
       }
     });
   } finally {
-    await context.close();
+    await browser.close().catch((error) => {
+      // Cleanup must not replace a successful PDF or the original render error.
+      console.error("[article-pdf] Browser cleanup failed", { slug, error });
+    });
   }
 };
 
